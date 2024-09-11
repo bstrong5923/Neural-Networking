@@ -20,5 +20,6 @@ As = [
 ]
 
 neuron = B([1.4,6.3,3.2,0.6], 1.1)
+
 print(input)
 print(neuron)
