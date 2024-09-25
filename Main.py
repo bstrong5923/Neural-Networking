@@ -1,25 +1,38 @@
+import os
+os.environ['SDL_VIDEO_WINDOW_POS'] = '0,0'
+import pgzrun
+from pgzhelper import *
+
 import random
+import numpy as np
 
-directions = ["N","E","S","W"]
-input = directions[random.randint(0,3)]
+HEIGHT = 1024
+WIDTH = 1024
+
+class guy:
+    def __init__(self):
+        self.show = Actor("red")
+    def move(self, n, e, s, w):
+        NS = 0
+        EW = 0
+        NESW = 0
+        if n > s:
+            NS = 1
+        if e > w:
+            EW = 1
+        if NS == 1:
+            if EW == 1:
 
 
-class A:
-    def __init__(self, want):
-        if want == input:
-            self.v = 1
-        else:
-            self.v = 0
 
-class B:
-    def __init__(self, w, b):
-        self.v = w[0]*As[0]+w[1]*As[1]+w[2]*As[2]+w[3]*As[3]+b
+isaac = guy()
 
-As = [
-    A("N"), A("E"), A("S"), A("W")
-]
+def draw():
+    screen.clear()
+    screen.fill((255,255,255,255))
+    isaac.show.draw()
 
-neuron = B([1.4,6.3,3.2,0.6], 1.1)
+def update():
+    print("hi")
 
-print(input)
-print(neuron)
+pgzrun.go()
