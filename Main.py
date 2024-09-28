@@ -15,17 +15,11 @@ class guy:
     def __init__(self):
         self.show = Actor("arrow")
     def move(self, choices):
-        done = 0
+        max = 0
         for x in range(len(choices)):
-            if done == 0:
-                me = 1
-                for y in range(x + 1, len(choices)):
-                    if choices[x] < choices[y]:
-                        me = 0
-                if me == 1:
-                    choice = options[x]
-                    done = 1
-        print(choice)
+            if choices[x] > choices[max]:
+                max = x
+        print(options[max])
 
 isaac = guy()
 
@@ -39,7 +33,7 @@ def draw():
     screen.fill((255,255,255,255))
     isaac.show.draw()
 
-def update():
-    print("hi")
+# def update():
+#     print("hi")
 
-pgzrun.go()
+# pgzrun.go()
