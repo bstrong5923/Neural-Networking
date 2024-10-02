@@ -12,22 +12,20 @@ WIDTH = 1024
 options = ["Stay Still", "Turn 90°", "Turn 180°", "Turn 270°", "Go Forward", "Go Right", "Go Backward", "Go Left"]
 
 class guy:
-    def __init__(self, layers, neurons):
+    def __init__(self, neurons):
         self.show = Actor("arrow")
 
     def move(self, choices):
+        print(options[self.find_max(choices)])
+
+    def find_max(self, choices):
         max = 0
         for x in range(len(choices)):
             if choices[x] > choices[max]:
                 max = x
-        print(options[max])
+        return max
 
-isaac = guy()
 
-vals = [random.randint(0,1000), random.randint(0,1000), random.randint(0,1000), random.randint(0,1000), random.randint(0,1000), random.randint(0,1000), random.randint(0,1000), random.randint(0,1000)]
-print(options)
-print(vals)
-isaac.move(vals)
 
 # def draw():
 #     screen.clear()
