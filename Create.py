@@ -5,8 +5,9 @@ layers = int(input("Number of layers: "))
 npl = []
 for x in range(layers):
     npl.append(int(input("Neurons in layer " + str(x + 1) + ": ")))
+print("guys = [")
 for guy in range(guys):
-    prin = ""
+    prin = "["
     for lay in range(1, layers):
         if lay != 1:
             prin += "]], "
@@ -23,6 +24,10 @@ for guy in range(guys):
                 prin += str(add)
             bias = random.randint(0, int(npl[lay - 1] / 3))
             denom = sum(weights) + bias
-    prin += "]]"
+    prin += "]]]"
+    if guy != guys - 1:
+        print("\tGuy(" + prin + "), ")
+    else:
+        print("\tGuy(" + prin + ")")
 
-    print("guy" + str(guy + 1) + " = guy(" + prin + ")")
+print("]")
