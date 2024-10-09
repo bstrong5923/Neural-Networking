@@ -1,6 +1,7 @@
 import random
 
 guys = int(input("# of guys: "))
+colordiff = int(round(16 / guys, 0))
 layers = int(input("Number of layers: "))
 npl = []
 for x in range(layers):
@@ -11,10 +12,10 @@ for guy in range(guys):
     for lay in range(1, layers):
         if lay != 1:
             prin += "]], "
-        prin += "[["
+        prin += "[[["
         for neuron in range(npl[lay]):
             if neuron != 0:
-                prin += "], ["
+                prin += "], [["
             weights = []
             for x in range(npl[lay - 1]):
                 if x != 0:
@@ -23,11 +24,13 @@ for guy in range(guys):
                 weights.append(add)
                 prin += str(add)
             bias = random.randint(0, int(npl[lay - 1] / 3))
-            denom = sum(weights) + bias
+            denom = round(sum(weights) + bias, 1)
+            prin += "], " + str(bias) + ", " + str(denom)
     prin += "]]]"
+    color = colordiff * guy + 1
     if guy != guys - 1:
-        print("\tGuy(" + prin + "), ")
+        print("\tguy(" + prin + ", " + str(color) + "), ")
     else:
-        print("\tGuy(" + prin + ")")
+        print("\tguy(" + prin + ", " + str(color) + ")")
 
 print("]")
