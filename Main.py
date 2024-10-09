@@ -12,12 +12,15 @@ WIDTH = 1024
 
 options = ["Turn 90°", "Turn 180°", "Turn 270°", "Go Forward", "Go Right", "Go Backward", "Go Left"]
 
+pause = False
+
 class guy:
     def __init__(self, neurons, color):
         self.d = 3
         self.actor = Actor(str(color))
         self.speed = 5
         self.brain = neurons
+        self.c = color
 
     def act(self, choices):
         x = self.findMax(choices) + 1
@@ -139,11 +142,23 @@ def draw():
     screen.fill((255,255,255,255))
     for guy in guys:
         guy.actor.draw()
+        if pause:
+            screen.draw.text(str(guy.c), color="black", center=(guy.actor.x, guy.actor.y), fontsize=36)
 
 def update():
-    for guy in guys:
-        guy.act(guy.choose())
-        guy.actor.angle = guy.d * -90
-    sleep(0.1)
+    if not pause:
+        for guy in guys:
+            guy.act(guy.choose())
+            guy.actor.angle = guy.d * -90
+        sleep(0.1)
+
+def on_key_down(key):
+    global pause
+    if key == key.SPACE:
+        pause = True
+def on_key_up(key):
+    global pause
+    if key == key.SPACE:
+        pause = False
 
 pgzrun.go()
