@@ -1,4 +1,5 @@
 import random
+from Guy import guy
 
 def printGen():
     guys = int(input("# of guys: "))
@@ -44,7 +45,7 @@ def printGen():
 def createGen(guys, layers, npl):
     colordiff = int(round(16 / guys, 0))
     result = []
-    for guy in range(guys):
+    for dawg in range(guys):
         guyInput = []
         for lay in range(1, layers):
             prin = []
@@ -52,7 +53,7 @@ def createGen(guys, layers, npl):
                 neu = []
                 weights = []
                 for x in range(npl[lay - 1]):
-                    add = random.randint(0,400) / 100
+                    add = random.randint(0,800) / 100
                     weights.append(add)
                 neu.append(weights)
                 bias = random.randint(0, int(npl[lay - 1] / 3))
@@ -61,7 +62,7 @@ def createGen(guys, layers, npl):
                 neu.append(denom)
                 prin.append(neu)
             guyInput.append(prin)
-        color = colordiff * guy + 1
-        newGuy = guy(guyInput, color)
-        result.append(newGuy)
+        color = colordiff * dawg + 1
+        print("guy(" + str(guyInput) + ", " + str(color) + ")")
+        result.append(guy(guyInput, color))
     return result

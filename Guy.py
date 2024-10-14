@@ -1,15 +1,23 @@
 from pgzhelper import *
 
-WIDTH = 1520
-HEIGHT = 960
+width = 95
+height = 60
+
+WIDTH = 16 * width
+HEIGHT = 16 * height
+
 
 class guy:
     def __init__(self, neurons, color):
         self.d = 3
         self.actor = Actor(str(color))
-        self.speed = 5
+        self.speed = 1
         self.brain = neurons
         self.c = color
+        self.x = 0
+        self.y = 0
+        self.lastx = 0
+        self.lasty = 0
 
     def act(self, choices):
         x = self.findMax(choices) + 1
@@ -27,17 +35,27 @@ class guy:
             self.op6()
         elif x == 7:
             self.op7()
+        self.update()
         self.boundary()
 
+    def update(self):
+        self.lastx = self.actor.x
+        self.lasty = self.actor.y
+        self.actor.x = self.x * 16
+        self.actor.y = self.y * 16
+        self.actor.angle = self.d * -90
+
+
     def boundary(self):
-        if self.actor.y > HEIGHT:
-            self.actor.y = HEIGHT
-        elif self.actor.y < 0:
-            self.actor.y = 0
-        elif self.actor.x > WIDTH:
-            self.actor.x = WIDTH
-        elif self.actor.x < 0:
-            self.actor.x = 0
+        if self.y > height - 1:
+            self.y = height - 1
+        elif self.y < 1:
+            self.y = 1
+        elif self.x > width - 1:
+            self.x = width - 1
+        elif self.x < 1:
+            self.x = 1
+
 
     def findMax(self, choices):
         max = 0
@@ -46,8 +64,9 @@ class guy:
                 max = x
         return max
 
+
     def choose(self):
-        output = [self.actor.x / WIDTH, self.actor.y / HEIGHT, self.d / 3]
+        output = [self.x / width, self.y / height, self.d / 3]
         for lay in range(len(self.brain)):
             input = output[:]
             output = []
@@ -55,31 +74,34 @@ class guy:
                 output.append(self.evalNeuron(input, neuron))
         return output
 
+
     def evalNeuron(self, input, values):
         val = 0
         for x in range(len(input)):
-            val += input[x] * values[0][x] #previous neuron times weight
-        val += values[1] #bias
-        val = val / values[2] #denom
+            val += input[x] * values[0][x]  # previous neuron times weight
+        val += values[1]  # bias
+        val = val / values[2]  # denom
         return val
-    
+
 
     def turn(self, val):
         self.d += val
         if self.d > 3:
             self.d -= 4
+
+
     def move(self, val):
         r = self.d + val
         if r > 3:
             r -= 4
         if r == 0:
-            self.actor.y += self.speed
+            self.y += self.speed
         elif r == 1:
-            self.actor.x += self.speed
+            self.x += self.speed
         elif r == 2:
-            self.actor.y -= self.speed
+            self.y -= self.speed
         else:
-            self.actor.x -= self.speed
+            self.x -= self.speed
 
 
     def op1(self):
