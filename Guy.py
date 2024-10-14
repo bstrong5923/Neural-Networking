@@ -1,7 +1,7 @@
 from pgzhelper import *
 
-WIDTH = 1500
-HEIGHT = 900
+WIDTH = 1520
+HEIGHT = 960
 
 class guy:
     def __init__(self, neurons, color):
