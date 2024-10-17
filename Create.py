@@ -3,7 +3,7 @@ from Guy import guy
 
 def printGen():
     guys = int(input("# of guys: "))
-    colordiff = int(round(16 / guys, 0))
+    colordiff = int(round(64 / guys, 0))
     layers = int(input("Number of layers: "))
     npl = []
     for x in range(layers):
@@ -43,7 +43,7 @@ def printGen():
     print("]")
 
 def createGen(guys, layers, npl):
-    colordiff = int(round(16 / guys, 0))
+    colordiff = int(round(64 / guys, 0))
     result = []
     for dawg in range(guys):
         guyInput = []
@@ -63,6 +63,27 @@ def createGen(guys, layers, npl):
                 prin.append(neu)
             guyInput.append(prin)
         color = colordiff * dawg + 1
-        print("guy(" + str(guyInput) + ", " + str(color) + ")")
         result.append(guy(guyInput, color))
     return result
+
+def nextGen(survivors):
+    restock = []
+    for x in range(64 - len(survivors)):
+        if len(survivors) > 1:
+            parent1 = survivors.pop(random.randint(0, len(survivors)))
+            parent2 = survivors.pop(random.randint(0, len(survivors)))
+            reproduce(parent1, parent2)
+            restock.append(parent1)
+            restock.append(parent2)
+        else:
+            if len(survivors) == 1:
+                restock.append(survivors.pop(0))
+            survivors = restock[:]
+            restock = []
+
+def reproduce(p1, p2):
+    print(str(p1) + " + " + str(p2))
+
+surviv = [12,45,23,86,3,48,65,73,43,4,5,58,54,2,545,6,24,57,0]
+print(len(surviv))
+nextGen(surviv)

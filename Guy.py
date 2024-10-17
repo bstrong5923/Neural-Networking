@@ -1,7 +1,7 @@
 from pgzhelper import *
 
-width = 95
-height = 60
+width = 130
+height = 80
 
 WIDTH = 16 * width
 HEIGHT = 16 * height
@@ -36,7 +36,7 @@ class guy:
         elif x == 7:
             self.op7()
         self.update()
-        self.boundary()
+        self.boundary(2)
 
     def update(self):
         self.lastx = self.actor.x
@@ -46,15 +46,15 @@ class guy:
         self.actor.angle = self.d * -90
 
 
-    def boundary(self):
-        if self.y > height - 1:
-            self.y = height - 1
-        elif self.y < 1:
-            self.y = 1
-        elif self.x > width - 1:
-            self.x = width - 1
-        elif self.x < 1:
-            self.x = 1
+    def boundary(self, indent):
+        if self.y > height - indent:
+            self.y = height - indent
+        elif self.y < indent:
+            self.y = indent
+        elif self.x > width - indent:
+            self.x = width - indent
+        elif self.x < indent:
+            self.x = indent
 
 
     def findMax(self, choices):

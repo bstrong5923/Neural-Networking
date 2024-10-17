@@ -12,15 +12,23 @@ from Create import createGen
 options = ["Turn 90°", "Turn 180°", "Turn 270°", "Go Forward", "Go Right", "Go Backward", "Go Left"]
 
 pause = False
+mousex = width / 2
+mousey = height / 2
 
 # guys = Gens.gen2 #  <----------------------------- WHAT GEN OF GUYS?
 
-guys = createGen(16, 3, [3, 7, 7])
+guys = createGen(64, 3, [3, 7, 7])
 
 def scatter(): #Spawn randomly
     for guy in guys:
         guy.x = random.randint(2, width - 2)
         guy.y = random.randint(2, height - 2)
+        guy.d = random.randint(0,3)
+
+def center(x, y):
+    for guy in guys:
+        guy.x = x
+        guy.y = y
         guy.d = random.randint(0,3)
 
 def draw():
@@ -47,6 +55,12 @@ def on_key_up(key):
         pause = False
     elif key == key.R:
         scatter()
+    elif key == key.E:
+        center(mousex, mousey)
+def on_mouse_move(pos):
+    global mousex, mousey
+    mousex = int(pos[0] / 16)
+    mousey = int(pos[1] / 16)
 
 scatter()
 
