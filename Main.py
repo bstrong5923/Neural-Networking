@@ -45,6 +45,7 @@ def update():
             guy.act(guy.choose())
         sleep(0.1)
 
+
 def on_key_down(key):
     global pause
     if key == key.SPACE:
