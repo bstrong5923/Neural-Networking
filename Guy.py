@@ -21,20 +21,10 @@ class guy:
 
     def act(self, choices):
         x = self.findMax(choices) + 1
-        if x == 1:
-            self.op1()
-        elif x == 2:
-            self.op2()
-        elif x == 3:
-            self.op3()
-        elif x == 4:
-            self.op4()
-        elif x == 5:
-            self.op5()
-        elif x == 6:
-            self.op6()
-        elif x == 7:
-            self.op7()
+        if x <= 3:
+            self.turn(x)
+        else:
+            self.move(x - 4)
         self.update()
         self.boundary(2)
 
@@ -102,19 +92,3 @@ class guy:
             self.y -= self.speed
         else:
             self.x -= self.speed
-
-
-    def op1(self):
-        self.turn(1)
-    def op2(self):
-        self.turn(2)
-    def op3(self):
-        self.turn(3)
-    def op4(self):
-        self.move(0)
-    def op5(self):
-        self.move(1)
-    def op6(self):
-        self.move(2)
-    def op7(self):
-        self.move(3)

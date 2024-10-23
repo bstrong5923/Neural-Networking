@@ -42,6 +42,7 @@ def printGen():
 
     print("]")
 
+
 def createGen(guys, layers, npl):
     colordiff = int(round(64 / guys, 0))
     result = []
