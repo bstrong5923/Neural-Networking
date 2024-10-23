@@ -84,7 +84,3 @@ def nextGen(survivors):
 
 def reproduce(p1, p2):
     print(str(p1) + " + " + str(p2))
-
-surviv = [12,45,23,86,3,48,65,73,43,4,5,58,54,2,545,6,24,57,0,83,456,83,53,90,60,56,18,38,28,26,346,856,164,173,376]
-print(len(surviv))
-nextGen(surviv)
