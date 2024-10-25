@@ -7,7 +7,7 @@ from time import sleep
 import random
 import Gens
 from Guy import HEIGHT, WIDTH, height, width
-from Create import createGen
+from Create import createGen, nextGen
 
 options = ["Turn 90°", "Turn 180°", "Turn 270°", "Go Forward", "Go Right", "Go Backward", "Go Left"]
 
@@ -16,8 +16,10 @@ mousex = width / 2
 mousey = height / 2
 
 # guys = Gens.gen2 #  <----------------------------- WHAT GEN OF GUYS?
-
 guys = createGen(64, 3, [3, 7, 7])
+
+wait = 15
+time = 0
 
 def scatter(): #Spawn randomly
     for guy in guys:
@@ -31,6 +33,7 @@ def center(x, y):
         guy.y = y
         guy.d = random.randint(0,3)
 
+
 def draw():
     screen.clear()
     screen.fill((255,255,255,255))
@@ -40,10 +43,23 @@ def draw():
             screen.draw.text(str(guy.c), color="black", center=(guy.actor.x, guy.actor.y), fontsize=36)
 
 def update():
+    global time, wait, guys
+    if time >= wait:
+        pops = []
+        for g in range(len(guys)):
+            if guys[g].x < width / 2:
+                pops.insert(0, g)
+        for g in pops:
+            guys.pop(g)
+        print(str(len(guys)) + " survivors")
+        guys = nextGen(guys)
+        scatter()
+        time = 0
     if not pause:
         for guy in guys:
             guy.act(guy.choose())
         sleep(0.1)
+        time += 0.1
 
 
 def on_key_down(key):

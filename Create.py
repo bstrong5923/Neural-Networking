@@ -68,12 +68,14 @@ def createGen(guys, layers, npl):
     return result
 
 def nextGen(survivors):
+    survivors = survivors[:]
+    newGen = []
     restock = []
-    for x in range(64 - len(survivors)):
+    for x in range(64):
         if len(survivors) > 1:
             parent1 = survivors.pop(random.randint(0, len(survivors) - 1))
             parent2 = survivors.pop(random.randint(0, len(survivors) - 1))
-            reproduce(parent1, parent2)
+            newGen.append(reproduce(parent1, parent2, x + 1))
             restock.append(parent1)
             restock.append(parent2)
         else:
@@ -81,6 +83,30 @@ def nextGen(survivors):
                 restock.append(survivors.pop(0))
             survivors = restock[:]
             restock = []
+    return newGen
 
-def reproduce(p1, p2):
-    print(str(p1) + " + " + str(p2))
+def reproduce(p1, p2, c):
+    layers = len(p1.brain) # find number of layers
+    npl = []
+    for l in p1.brain: # find neurons per layer
+        npl.append(len(l))
+
+    guyInput = []
+    for lay in range(1, layers):
+        prin = []
+        for neuron in range(npl[lay]):
+            neu = []
+            weights = []
+            for x in range(npl[lay - 1]):
+                add = random.randint(0, 800) / 100
+                weights.append(add)
+            neu.append(weights)
+            bias = random.randint(0, int(npl[lay - 1] / 3))
+            denom = round(sum(weights) + bias, 2)
+            neu.append(bias)
+            neu.append(denom)
+            prin.append(neu)
+        guyInput.append(prin)
+
+    kid = guy(guyInput, c)
+    return kid
