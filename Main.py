@@ -18,7 +18,7 @@ mousey = height / 2
 # guys = Gens.gen2 #  <----------------------------- WHAT GEN OF GUYS?
 guys = createGen(64, 3, [3, 7, 7])
 
-wait = 15
+wait = 10
 time = 0
 
 def scatter(): #Spawn randomly
@@ -51,7 +51,6 @@ def update():
                 pops.insert(0, g)
         for g in pops:
             guys.pop(g)
-        print(str(len(guys)) + " survivors")
         guys = nextGen(guys)
         scatter()
         time = 0

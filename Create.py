@@ -30,8 +30,9 @@ def printGen():
                     add = random.randint(0,400) / 100
                     weights.append(add)
                     prin += str(add)
-                bias = random.randint(0, int(npl[lay - 1] / 3))
-                denom = round(sum(weights) + bias, 2)
+                total = sum(weights)
+                bias = random.randint(0, int(total) * 50) / 100
+                denom = round(total + bias, 2)
                 prin += "], " + str(bias) + ", " + str(denom)
         prin += "]]]"
         color = colordiff * guy + 1
@@ -57,18 +58,20 @@ def createGen(guys, layers, npl):
                     add = random.randint(0,800) / 100
                     weights.append(add)
                 neu.append(weights)
-                bias = random.randint(0, int(npl[lay - 1] / 3))
-                denom = round(sum(weights) + bias, 2)
+                total = sum(weights)
+                bias = random.randint(0, int(total) * 50) / 100
+                denom = round(total + bias, 2)
                 neu.append(bias)
                 neu.append(denom)
                 prin.append(neu)
             guyInput.append(prin)
         color = colordiff * dawg + 1
         result.append(guy(guyInput, color))
+        print("guy(",str(guyInput),", ",color,")")
     return result
 
-def nextGen(survivors):
-    survivors = survivors[:]
+def nextGen(inp):
+    survivors = inp[:]
     newGen = []
     restock = []
     for x in range(64):
@@ -86,8 +89,8 @@ def nextGen(survivors):
     return newGen
 
 def reproduce(p1, p2, c):
-    layers = len(p1.brain) # find number of layers
-    npl = []
+    layers = len(p1.brain) + 1 # find number of layers
+    npl = [len(p1.brain[0][0][0])]
     for l in p1.brain: # find neurons per layer
         npl.append(len(l))
 
@@ -101,8 +104,9 @@ def reproduce(p1, p2, c):
                 add = random.randint(0, 800) / 100
                 weights.append(add)
             neu.append(weights)
-            bias = random.randint(0, int(npl[lay - 1] / 3))
-            denom = round(sum(weights) + bias, 2)
+            total = sum(weights)
+            bias = random.randint(0, int(total) * 50) / 100
+            denom = round(total + bias, 2)
             neu.append(bias)
             neu.append(denom)
             prin.append(neu)
