@@ -67,7 +67,6 @@ def createGen(guys, layers, npl):
             guyInput.append(prin)
         color = colordiff * dawg + 1
         result.append(guy(guyInput, color))
-        print("guy(",str(guyInput),", ",color,")")
     return result
 
 def nextGen(inp):
@@ -94,6 +93,9 @@ def reproduce(p1, p2, c):
     for l in p1.brain: # find neurons per layer
         npl.append(len(l))
 
+    print(str(p1.brain))
+    print(str(p2.brain))
+
     guyInput = []
     for lay in range(1, layers):
         prin = []
@@ -101,10 +103,19 @@ def reproduce(p1, p2, c):
             neu = []
             weights = []
             for x in range(npl[lay - 1]):
-                add = random.randint(0, 800) / 100
+                if random.randint(0,1) == 1:
+                    add = p1.brain[lay - 1][neuron][0][x]
+                else:
+                    add = p2.brain[lay - 1][neuron][0][x]
+                print(str(add))
+                add = round(add + random.randint(-100, 100) / 100, 2)
                 weights.append(add)
             neu.append(weights)
             total = sum(weights)
+            if random.randint(0, 1) == 1:
+                ratio = p1.brain[lay][neuron][1] / sum(p1.brain[lay][neuron][0])
+            else:
+                ratio = p2.brain[lay][neuron][1] / sum(p2.brain[lay][neuron][0])
             bias = random.randint(0, int(total) * 50) / 100
             denom = round(total + bias, 2)
             neu.append(bias)
