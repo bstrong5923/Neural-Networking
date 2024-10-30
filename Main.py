@@ -41,8 +41,8 @@ def draw():
     for guy in guys:
         guy.actor.draw()
         if pause:
-            screen.draw.text(str(guy.c), color="black", center=(guy.actor.x, guy.actor.y), fontsize=36)
-    screen.draw.text("Gen " + str(gen), color="black", center=(40, 15), fontsize=36)
+            screen.draw.text(str(guy.c), color="black", center=(guy.actor.x, guy.actor.y), fontsize=12, fontname="pixchicago")
+    screen.draw.text("Gen " + str(gen), color="black", topleft=(8, 2), fontsize=22, fontname="pixchicago")
 
 def update():
     global t, ticks, guys, s, gen
