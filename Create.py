@@ -47,6 +47,7 @@ def printGen():
 def createGen(guys, layers, npl):
     colordiff = int(round(64 / guys, 0))
     result = []
+    print(str(layers))
     for dawg in range(guys):
         guyInput = []
         for lay in range(1, layers):
@@ -93,9 +94,6 @@ def reproduce(p1, p2, c):
     for l in p1.brain: # find neurons per layer
         npl.append(len(l))
 
-    print(str(p1.brain))
-    print(str(p2.brain))
-
     guyInput = []
     for lay in range(1, layers):
         prin = []
@@ -107,16 +105,15 @@ def reproduce(p1, p2, c):
                     add = p1.brain[lay - 1][neuron][0][x]
                 else:
                     add = p2.brain[lay - 1][neuron][0][x]
-                print(str(add))
                 add = round(add + random.randint(-100, 100) / 100, 2)
+                add = makeReal(add, 8)
                 weights.append(add)
             neu.append(weights)
             total = sum(weights)
             if random.randint(0, 1) == 1:
-                ratio = p1.brain[lay][neuron][1] / sum(p1.brain[lay][neuron][0])
+                bias = makeBias(p1.brain, lay, neuron, total)
             else:
-                ratio = p2.brain[lay][neuron][1] / sum(p2.brain[lay][neuron][0])
-            bias = random.randint(0, int(total) * 50) / 100
+                bias = makeBias(p2.brain, lay, neuron, total)
             denom = round(total + bias, 2)
             neu.append(bias)
             neu.append(denom)
@@ -125,3 +122,20 @@ def reproduce(p1, p2, c):
 
     kid = guy(guyInput, c)
     return kid
+
+def makeBias(brain, lay, neuron, total):
+    print(str(len(brain)))
+    print(str(lay))
+    percent = brain[lay - 1][neuron][1] / brain[lay - 1][neuron][2]
+    bias = round(total * percent, 2)
+    bias += random.randint(-300, 300) / 300
+    bias = makeReal(bias, round((bias + total) * 0.34, 2))
+    return bias
+
+def makeReal(num, max):
+    if num > max:
+        num = max
+    elif num <= 0:
+        num = .01
+    return num
+

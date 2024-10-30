@@ -5,7 +5,6 @@ from pgzhelper import *
 
 from time import sleep
 import random
-import Gens
 from Guy import HEIGHT, WIDTH, height, width
 from Create import createGen, nextGen
 
@@ -15,11 +14,12 @@ pause = False
 mousex = width / 2
 mousey = height / 2
 
-# guys = Gens.gen2 #  <----------------------------- WHAT GEN OF GUYS?
 guys = createGen(64, 3, [3, 7, 7])
 
-wait = 10
-time = 0
+ticks = 10
+t = 0
+s = 100
+gen = 1
 
 def scatter(): #Spawn randomly
     for guy in guys:
@@ -35,16 +35,18 @@ def center(x, y):
 
 
 def draw():
+    global gen
     screen.clear()
     screen.fill((255,255,255,255))
     for guy in guys:
         guy.actor.draw()
         if pause:
             screen.draw.text(str(guy.c), color="black", center=(guy.actor.x, guy.actor.y), fontsize=36)
+    screen.draw.text("Gen " + str(gen), color="black", center=(40, 15), fontsize=36)
 
 def update():
-    global time, wait, guys
-    if time >= wait:
+    global t, ticks, guys, s, gen
+    if t >= ticks:
         pops = []
         for g in range(len(guys)):
             if guys[g].x < width / 2:
@@ -52,13 +54,14 @@ def update():
         for g in pops:
             guys.pop(g)
         guys = nextGen(guys)
+        gen += 1
         scatter()
-        time = 0
+        t = 0
     if not pause:
         for guy in guys:
             guy.act(guy.choose())
-        sleep(0.1)
-        time += 0.1
+        sleep(.1 / s)
+        t += .1
 
 
 def on_key_down(key):

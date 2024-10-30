@@ -1,7 +1,7 @@
 from pgzhelper import *
 
-width = 130
-height = 80
+width = 110
+height = 60
 
 WIDTH = 16 * width
 HEIGHT = 16 * height
