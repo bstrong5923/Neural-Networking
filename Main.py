@@ -18,7 +18,7 @@ guys = createGen(64, 3, [3, 7, 7])
 
 ticks = 10
 t = 0
-s = 100
+s = 250
 gen = 1
 
 def scatter(): #Spawn randomly

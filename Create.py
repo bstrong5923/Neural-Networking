@@ -1,6 +1,8 @@
 import random
 from Guy import guy
 
+mutation = 2
+
 def printGen():
     guys = int(input("# of guys: "))
     colordiff = int(round(64 / guys, 0))
@@ -78,7 +80,7 @@ def nextGen(inp):
         if len(survivors) > 1:
             parent1 = survivors.pop(random.randint(0, len(survivors) - 1))
             parent2 = survivors.pop(random.randint(0, len(survivors) - 1))
-            newGen.append(reproduce(parent1, parent2, x + 1))
+            newGen.append(reproduce(parent1, parent2))
             restock.append(parent1)
             restock.append(parent2)
         else:
@@ -88,7 +90,8 @@ def nextGen(inp):
             restock = []
     return newGen
 
-def reproduce(p1, p2, c):
+def reproduce(p1, p2):
+    global mutation
     layers = len(p1.brain) + 1 # find number of layers
     npl = [len(p1.brain[0][0][0])]
     for l in p1.brain: # find neurons per layer
@@ -105,8 +108,8 @@ def reproduce(p1, p2, c):
                     add = p1.brain[lay - 1][neuron][0][x]
                 else:
                     add = p2.brain[lay - 1][neuron][0][x]
-                add = round(add + random.randint(-100, 100) / 100, 2)
-                add = makeReal(add, 8)
+                add = round(add + random.randint(-mutation, mutation) / 100, 2)
+                add = makeReal(add, .01, 8)
                 weights.append(add)
             neu.append(weights)
             total = sum(weights)
@@ -119,23 +122,28 @@ def reproduce(p1, p2, c):
             neu.append(denom)
             prin.append(neu)
         guyInput.append(prin)
+    if random.randint == 1:
+        c = p1.c
+    else:
+        c = p2.c
+    c += random.randint(-1,1)
+    c = makeReal(c, 1, 64)
 
     kid = guy(guyInput, c)
     return kid
 
 def makeBias(brain, lay, neuron, total):
-    print(str(len(brain)))
-    print(str(lay))
+    global mutation
     percent = brain[lay - 1][neuron][1] / brain[lay - 1][neuron][2]
     bias = round(total * percent, 2)
-    bias += random.randint(-300, 300) / 300
-    bias = makeReal(bias, round((bias + total) * 0.34, 2))
+    bias += round(random.randint(-3 * mutation, 3 * mutation) / 300, 2)
+    bias = makeReal(bias, .01, round((bias + total) * 0.34, 2))
     return bias
 
-def makeReal(num, max):
+def makeReal(num, min, max):
     if num > max:
         num = max
     elif num <= 0:
-        num = .01
+        num = min
     return num
 
