@@ -3,49 +3,6 @@ from Guy import guy
 
 mutation = 2
 
-def printGen():
-    guys = int(input("# of guys: "))
-    colordiff = int(round(64 / guys, 0))
-    layers = int(input("Number of layers: "))
-    npl = []
-    for x in range(layers):
-        npl.append(int(input("Neurons in layer " + str(x + 1) + ": ")))
-    prin = "guys = [ #" + str(layers - 2) + " inner layer(s), neurons per layer: "
-    for a in range(len(npl) - 2):
-        if a != 0:
-            prin += ", "
-        prin += str(npl[a + 1])
-    print(prin)
-    for guy in range(guys):
-        prin = "["
-        for lay in range(1, layers):
-            if lay != 1:
-                prin += "]], "
-            prin += "[[["
-            for neuron in range(npl[lay]):
-                if neuron != 0:
-                    prin += "], [["
-                weights = []
-                for x in range(npl[lay - 1]):
-                    if x != 0:
-                        prin += ", "
-                    add = random.randint(0,400) / 100
-                    weights.append(add)
-                    prin += str(add)
-                total = sum(weights)
-                bias = random.randint(0, int(total) * 50) / 100
-                denom = round(total + bias, 2)
-                prin += "], " + str(bias) + ", " + str(denom)
-        prin += "]]]"
-        color = colordiff * guy + 1
-        if guy != guys - 1:
-            print("\tguy(" + prin + ", " + str(color) + "), ")
-        else:
-            print("\tguy(" + prin + ", " + str(color) + ")")
-
-    print("]")
-
-
 def createGen(guys, layers, npl):
     colordiff = int(round(64 / guys, 0))
     result = []

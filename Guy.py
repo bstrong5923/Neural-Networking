@@ -16,8 +16,6 @@ class guy:
         self.c = color
         self.x = 0
         self.y = 0
-        self.lastx = 0
-        self.lasty = 0
 
     def act(self, choices):
         x = self.findMax(choices) + 1
@@ -29,8 +27,6 @@ class guy:
         self.boundary(2)
 
     def update(self):
-        self.lastx = self.actor.x
-        self.lasty = self.actor.y
         self.actor.x = self.x * 16
         self.actor.y = self.y * 16
         self.actor.angle = self.d * -90
