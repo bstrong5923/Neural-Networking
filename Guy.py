@@ -63,9 +63,11 @@ class guy:
 
     def evalNeuron(self, input, values):
         val = 0
+        total = 0
         for x in range(len(input)):
+            total += values[0][x]
             val += input[x] * values[0][x]  # previous neuron times weight
-        val += values[1]  # bias
+        val += values[1] * total  # bias
         val = val / values[2]  # denom
         return val
 
