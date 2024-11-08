@@ -75,7 +75,7 @@ def reproduce(p1, p2):
                 bias = p1.brain[lay - 1][neuron][1]
             else:
                 bias = p2.brain[lay - 1][neuron][1]
-            bias += random.randint(-3 * mutation, 3 * mutation) / 1000
+            bias += random.randint(-mutation, mutation) / 1000
             bias = round(makeReal(bias, 0, 0.1 * maxB), 3)
             denom = round(total * (1 + 0.1 * maxB), 2)
             neu.append(bias)

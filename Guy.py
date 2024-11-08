@@ -1,12 +1,5 @@
 from pgzhelper import *
 
-width = 120
-height = 65
-
-WIDTH = 16 * width
-HEIGHT = 16 * height
-
-
 class guy:
     def __init__(self, neurons, color):
         self.d = 3
@@ -17,14 +10,14 @@ class guy:
         self.x = 0
         self.y = 0
 
-    def act(self, choices):
+    def act(self, choices, h, w):
         x = self.findMax(choices) + 1
         if x <= 3:
             self.turn(x)
         else:
             self.move(x - 4)
         self.update()
-        self.boundary(2)
+        self.boundary(2, h, w)
 
     def update(self):
         self.actor.x = self.x * 16
@@ -32,7 +25,7 @@ class guy:
         self.actor.angle = self.d * -90
 
 
-    def boundary(self, indent):
+    def boundary(self, indent, height, width):
         if self.y > height - indent:
             self.y = height - indent
         elif self.y < indent:
@@ -51,7 +44,7 @@ class guy:
         return max
 
 
-    def choose(self):
+    def choose(self, height, width):
         output = [self.x / width, self.y / height, self.d / 3]
         for lay in range(len(self.brain)):
             input = output[:]

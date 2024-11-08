@@ -5,10 +5,12 @@ from pgzhelper import *
 
 from time import sleep
 import random
-from Guy import HEIGHT, WIDTH, height, width
 from Create import createGen, nextGen
 
-options = ["Turn 90°", "Turn 180°", "Turn 270°", "Go Forward", "Go Right", "Go Backward", "Go Left"]
+width = 120
+height = 65
+WIDTH = 16 * width
+HEIGHT = 16 * height
 
 pause = False
 mousex = width / 2
@@ -16,9 +18,10 @@ mousey = height / 2
 
 guys = createGen(64, 3, [3, 7, 7])
 
-ticks = 10
+limit = 110 # TOTAL TICKS
+s = 250 # TICKS/SEC
+
 t = 0
-s = 250
 gen = 1
 
 def scatter(): #Spawn randomly
@@ -45,8 +48,8 @@ def draw():
     screen.draw.text("Gen " + str(gen), color="black", topleft=(8, 2), fontsize=22, fontname="pixchicago")
 
 def update():
-    global t, ticks, guys, s, gen
-    if t >= ticks:
+    global t, limit, guys, s, gen
+    if t >= limit:
         pops = []
         for g in range(len(guys)):
             if guys[g].x < width / 2:
@@ -59,9 +62,9 @@ def update():
         t = 0
     if not pause:
         for guy in guys:
-            guy.act(guy.choose())
-        sleep(.1 / s)
-        t += .1
+            guy.act(guy.choose(height, width), height, width)
+        sleep(1 / s)
+        t += 1
 
 
 def on_key_down(key):
