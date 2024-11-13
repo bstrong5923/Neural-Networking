@@ -1,4 +1,5 @@
 from pgzhelper import *
+import Game
 
 class guy:
     def __init__(self, neurons, color):
@@ -10,30 +11,8 @@ class guy:
         self.x = 0
         self.y = 0
 
-    def act(self, choices, h, w):
-        x = self.findMax(choices) + 1
-        if x <= 3:
-            self.turn(x)
-        else:
-            self.move(x - 4)
-        self.update()
-        self.boundary(2, h, w)
-
-    def update(self):
-        self.actor.x = self.x * 16
-        self.actor.y = self.y * 16
-        self.actor.angle = self.d * -90
-
-
-    def boundary(self, indent, height, width):
-        if self.y > height - indent:
-            self.y = height - indent
-        elif self.y < indent:
-            self.y = indent
-        elif self.x > width - indent:
-            self.x = width - indent
-        elif self.x < indent:
-            self.x = indent
+    def act(self, choices):
+        Game.act(self, self.findMax(choices) + 1)
 
 
     def findMax(self, choices):
@@ -44,8 +23,8 @@ class guy:
         return max
 
 
-    def choose(self, height, width):
-        output = [self.x / width, self.y / height, self.d / 3]
+    def choose(self, invals):
+        output = invals
         for lay in range(len(self.brain)):
             input = output[:]
             output = []
@@ -63,23 +42,3 @@ class guy:
         val += values[1] * total  # bias
         val = val / values[2]  # denom
         return val
-
-
-    def turn(self, val):
-        self.d += val
-        if self.d > 3:
-            self.d -= 4
-
-
-    def move(self, val):
-        r = self.d + val
-        if r > 3:
-            r -= 4
-        if r == 0:
-            self.y += self.speed
-        elif r == 1:
-            self.x += self.speed
-        elif r == 2:
-            self.y -= self.speed
-        else:
-            self.x -= self.speed
