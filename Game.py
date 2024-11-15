@@ -1,3 +1,11 @@
+import random
+import Create
+
+guys = Create.firstGen(64, 3, [3, 7, 7])
+
+fontColor = "black"
+fontName = "pixchicago"
+
 w = 120
 h = 65
 
@@ -48,3 +56,36 @@ def move(g, val):
         g.y -= g.speed
     else:
         g.x -= g.speed
+
+
+def start():
+    scatter()
+
+def scatter(): #Spawn randomly
+    global guys
+    for guy in guys:
+        guy.x = random.randint(2, w - 2)
+        guy.y = random.randint(2, h - 2)
+        guy.d = random.randint(0,3)
+
+def visual():
+    global guys
+    result = []
+    for guy in guys:
+        result.append(guy.actor)
+    return result
+
+def restart():
+    global guys
+    pops = []
+    for g in range(len(guys)):
+        if guys[g].x < w / 2:
+            pops.insert(0, g)
+    for g in pops:
+        guys.pop(g)
+    guys = Create.nextGen(guys)
+    scatter()
+
+def run():
+    for guy in guys:
+        guy.act(guy.choose(getInput(guy)))

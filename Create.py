@@ -4,7 +4,7 @@ from Guy import guy
 mutation = 1
 maxB = 1
 
-def createGen(guys, layers, npl):
+def firstGen(guys, layers, npl):
     global maxB
     colordiff = int(round(64 / guys, 0))
     result = []
