@@ -99,17 +99,16 @@ def newGuys(inp):
     newGen = []
     restock = []
     for x in range(maxPop):
-        if len(survivors) > 1:
-            parent1 = survivors.pop(random.randint(0, len(survivors) - 1))
-            parent2 = survivors.pop(random.randint(0, len(survivors) - 1))
-            newGen.append(reproduce(parent1, parent2))
-            restock.append(parent1)
-            restock.append(parent2)
-        else:
+        if len(survivors) <= 1:
             if len(survivors) == 1:
                 restock.append(survivors.pop(0))
             survivors = restock[:]
             restock = []
+        parent1 = survivors.pop(random.randint(0, len(survivors) - 1))
+        parent2 = survivors.pop(random.randint(0, len(survivors) - 1))
+        newGen.append(reproduce(parent1, parent2))
+        restock.append(parent1)
+        restock.append(parent2)
     return newGen
 def makeBrain(p1, p2):
     global mutation, maxB
