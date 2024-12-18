@@ -149,11 +149,19 @@ def getInput(g):
             best = diff
             besta = a
     besta = apples[besta]
-    xdiff = besta.x / 16 - g.x
-    xdiff = 0.5 + (xdiff / w)
-    ydiff = besta.y / 16 - g.y
-    ydiff = 0.5 + (ydiff / h)
-    return [g.x / w, g.y / h, g.d / 3, xdiff, ydiff]
+    if besta.x / 16 < g.x:
+        lr = 0
+    elif besta.x / 16 > g.x:
+        lr = 1
+    else:
+        lr = 0.5
+    # xdiff = besta.x / 16 - g.x
+    # xdiff = 0.5 + (xdiff / w)
+    # ydiff = besta.y / 16 - g.y
+    # ydiff = 0.5 + (ydiff / h)
+    # print(str([g.d / 3, xdiff, ydiff]))
+    # return [g.x / w, g.y / h,g.d / 3, xdiff, ydiff]
+
 
 def act(g, x):
     if x <= 3:
@@ -232,9 +240,9 @@ def run():
 def start():
     global guys, fc, fn, h, w, limit, s, maxPop
 
-    maxPop = 16
+    maxPop = 1
 
-    guys = firstGuys(firstBrains(maxPop, 2, [5, 7]))
+    guys = firstGuys(firstBrains(maxPop, 2, [3, 7]))
 
     fc = "black"
     fn = "pixchicago"
@@ -243,7 +251,7 @@ def start():
     h = 20
 
     limit = 50  # TOTAL TICKS
-    s = 250  # TICKS/SEC
+    s = 1  # TICKS/SEC
 
     initial()
     scatter()
