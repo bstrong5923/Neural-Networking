@@ -93,6 +93,7 @@ def newGuys(inp):
                 restock.append(survivors.pop(0))
             survivors = restock[:]
             restock = []
+        print(len(survivors) - 1)
         parent1 = survivors.pop(random.randint(0, len(survivors) - 1))
         parent2 = survivors.pop(random.randint(0, len(survivors) - 1))
         newGen.append(reproduce(parent1, parent2))
@@ -139,28 +140,56 @@ def makeBrain(p1, p2):
 
 
 def getInput(g):
-    global apples
+    return whatDirectionToGo(g)
+
+def getBestA(g):
     best = 100
-    besta = 0
+    bestIndex = 0
     for a in range(len(apples)):
         apple = apples[a]
         diff = abs(apple.x - g.actor.x) + abs(apple.y - g.actor.y)
         if diff < best:
             best = diff
-            besta = a
-    besta = apples[besta]
-    if besta.x / 16 < g.x:
-        lr = 0
-    elif besta.x / 16 > g.x:
-        lr = 1
+            bestIndex = a
+    return apples[bestIndex]
+
+def whatDirectionToGo(g):
+    if len(apples) > 0:
+        besta = getBestA(g)
+        if besta.x / 16 < g.x:
+            lr = 0
+        elif besta.x / 16 > g.x:
+            lr = 1
+        else:
+            lr = 0.5
+        if besta.y / 16 > g.y:
+            ud = 1
+        elif besta.y < g.y:
+            ud = 0
+        else:
+            ud = 0.5
+        return [g.d / 3, lr, ud]
     else:
-        lr = 0.5
-    # xdiff = besta.x / 16 - g.x
-    # xdiff = 0.5 + (xdiff / w)
-    # ydiff = besta.y / 16 - g.y
-    # ydiff = 0.5 + (ydiff / h)
-    # print(str([g.d / 3, xdiff, ydiff]))
-    # return [g.x / w, g.y / h,g.d / 3, xdiff, ydiff]
+        return [g.d / 3, 0.5, 0.5]
+
+def whereAmIWithDiffs(g):
+    besta = getBestA(g)
+    xdiff = besta.x / 16 - g.x
+    xdiff = 0.5 + (xdiff / w)
+    ydiff = besta.y / 16 - g.y
+    ydiff = 0.5 + (ydiff / h)
+    return [g.x / w, g.y / h, g.d / 3, xdiff, ydiff]
+
+def howGoodEachDirection(g):
+    LRUD = [1, 1, 1, 1]
+    lrud = []
+    for apple in apples:
+
+        lrud[0] = g.x / width - apple.x / WIDTH
+        lrud[1] = apple.x / WIDTH - g.x / width
+        lrud[2] = apple.y / HEIGHT - g.y / width
+        lrud[3] = g.y / width - apple.y / HEIGHT
+
 
 
 def act(g, x):
@@ -240,7 +269,7 @@ def run():
 def start():
     global guys, fc, fn, h, w, limit, s, maxPop
 
-    maxPop = 1
+    maxPop = 20
 
     guys = firstGuys(firstBrains(maxPop, 2, [3, 7]))
 
@@ -251,7 +280,7 @@ def start():
     h = 20
 
     limit = 50  # TOTAL TICKS
-    s = 1  # TICKS/SEC
+    s = 100  # TICKS/SEC
 
     initial()
     scatter()
@@ -267,9 +296,13 @@ def scatter():
 
 #spawn apples
 def makeApples():
-    global apples
+    global apples, gen
     apples = []
-    for x in range(maxPop * 3):
+    less = (gen * 0.015)
+    if less > 1.9:
+        less = 1.9
+    print("APPLES: " + str((maxPop * (2.5 - less))))
+    for x in range(int(maxPop * (2.5 - less))):
         apples.append(Actor("apple"))
     for apple in apples:
         apple.x = random.randint(2, w - 2) * 16
