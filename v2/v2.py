@@ -93,7 +93,6 @@ def newGuys(inp):
                 restock.append(survivors.pop(0))
             survivors = restock[:]
             restock = []
-        print(len(survivors) - 1)
         parent1 = survivors.pop(random.randint(0, len(survivors) - 1))
         parent2 = survivors.pop(random.randint(0, len(survivors) - 1))
         newGen.append(reproduce(parent1, parent2))
@@ -140,7 +139,7 @@ def makeBrain(p1, p2):
 
 
 def getInput(g):
-    return whatDirectionToGo(g)
+    return howGoodEachDirectionBest(g)
 
 def getBestA(g):
     best = 100
@@ -181,14 +180,35 @@ def whereAmIWithDiffs(g):
     return [g.x / w, g.y / h, g.d / 3, xdiff, ydiff]
 
 def howGoodEachDirection(g):
-    LRUD = [1, 1, 1, 1]
-    lrud = []
+    LRUD = [0, 0, 0, 0]
+    lrud = [1, 1, 1, 1]
     for apple in apples:
+        lrud[0] = 1 - (g.x / w - apple.x / WIDTH)
+        lrud[1] = 1 - (apple.x / WIDTH - g.x / w)
+        lrud[2] = 1 - (g.y / h - apple.y / HEIGHT)
+        lrud[3] = 1 - (apple.y / HEIGHT - g.y / h)
 
-        lrud[0] = g.x / width - apple.x / WIDTH
-        lrud[1] = apple.x / WIDTH - g.x / width
-        lrud[2] = apple.y / HEIGHT - g.y / width
-        lrud[3] = g.y / width - apple.y / HEIGHT
+        for x in range(len(lrud)):
+            if lrud[x] > 1:
+                lrud[x] = 0
+            if lrud[x] > LRUD[x]:
+                LRUD[x] = lrud[x]
+    LRUD.append(g.d / 3)
+    return LRUD
+
+def howGoodEachDirectionBest(g):
+    lrud = [0, 0, 0, 0, 0]
+    apple = getBestA(g)
+    lrud[0] = 1 - (g.x / w - apple.x / WIDTH)
+    lrud[1] = 1 - (apple.x / WIDTH - g.x / w)
+    lrud[2] = 1 - (g.y / h - apple.y / HEIGHT)
+    lrud[3] = 1 - (apple.y / HEIGHT - g.y / h)
+    for x in range(len(lrud)):
+        if lrud[x] > 1:
+            lrud[x] = 0
+    lrud[4] = g.d / 3
+    return(lrud)
+
 
 
 
@@ -271,7 +291,7 @@ def start():
 
     maxPop = 20
 
-    guys = firstGuys(firstBrains(maxPop, 2, [3, 7]))
+    guys = firstGuys(firstBrains(maxPop, 2, [5, 7]))
 
     fc = "black"
     fn = "pixchicago"
@@ -301,7 +321,6 @@ def makeApples():
     less = (gen * 0.015)
     if less > 1.9:
         less = 1.9
-    print("APPLES: " + str((maxPop * (2.5 - less))))
     for x in range(int(maxPop * (2.5 - less))):
         apples.append(Actor("apple"))
     for apple in apples:
