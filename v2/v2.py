@@ -139,8 +139,7 @@ def makeBrain(p1, p2):
 
 
 def getInput(g):
-    return howGoodEachDirectionBest(g)
-
+    return whatDirectionToGo(g)
 def getBestA(g):
     best = 100
     bestIndex = 0
@@ -151,7 +150,6 @@ def getBestA(g):
             best = diff
             bestIndex = a
     return apples[bestIndex]
-
 def whatDirectionToGo(g):
     if len(apples) > 0:
         besta = getBestA(g)
@@ -178,7 +176,6 @@ def whereAmIWithDiffs(g):
     ydiff = besta.y / 16 - g.y
     ydiff = 0.5 + (ydiff / h)
     return [g.x / w, g.y / h, g.d / 3, xdiff, ydiff]
-
 def howGoodEachDirection(g):
     LRUD = [0, 0, 0, 0]
     lrud = [1, 1, 1, 1]
@@ -195,7 +192,6 @@ def howGoodEachDirection(g):
                 LRUD[x] = lrud[x]
     LRUD.append(g.d / 3)
     return LRUD
-
 def howGoodEachDirectionBest(g):
     lrud = [0, 0, 0, 0, 0]
     apple = getBestA(g)
@@ -211,7 +207,6 @@ def howGoodEachDirectionBest(g):
 
 
 
-
 def act(g, x):
     if x <= 3:
         turn(g, x)
@@ -224,7 +219,6 @@ def updateGuy(g):
     g.actor.y = g.y * 16
     g.actor.angle = g.d * -90
     boundary(g, 2)
-
 def boundary(g, indent):
     if g.y > h - indent:
         g.y = h - indent
@@ -239,8 +233,6 @@ def turn(g, val):
     g.d += val
     if g.d > 3:
         g.d -= 4
-
-
 def move(g, val):
     r = g.d + val
     if r > 3:
@@ -276,6 +268,16 @@ def restart():
     makeApples()
 
 def run():
+    global t, limit, s, gen
+
+    # Next Generation
+    if t >= limit:
+        restart()
+        gen += 1
+        if not SHOW:
+            print("NEW GEN")
+        t = 0
+
     for guy in guys:
         act(guy, findMax(guy.choose(getInput(guy))) + 1)
         for a in range(len(apples)):
@@ -285,26 +287,34 @@ def run():
                 apples.pop(a)
                 break
 
+    sleep(1 / s)
+    t += 1
+
 
 def start():
-    global guys, fc, fn, h, w, limit, s, maxPop
+    global guys, fc, fn, h, w, limit, s, maxPop, SHOW
 
-    maxPop = 20
+    SHOW = False
+
+    maxPop = 45
 
     guys = firstGuys(firstBrains(maxPop, 2, [5, 7]))
 
     fc = "black"
     fn = "pixchicago"
 
-    w = 20
-    h = 20
+    w = 42
+    h = 30
 
     limit = 50  # TOTAL TICKS
-    s = 100  # TICKS/SEC
+    s = 1000  # TICKS/SEC
 
     initial()
     scatter()
     makeApples()
+
+    while not SHOW:
+        run()
 
 #Spawn randomly
 def scatter():
@@ -369,6 +379,10 @@ def initial():
     gen = 1
     HEIGHT = h * 16
     WIDTH = w * 16
+
+start()
+
+# v PYGAME v
 def draw():
     global gen
     screen.clear()
@@ -377,19 +391,8 @@ def draw():
         thing.draw()
     screen.draw.text("Gen " + str(gen), color=fc, topleft=(8, 2), fontsize=22, fontname=fn)
 def update():
-    global t, limit, s, gen
-
-    # Next Generation
-    if t >= limit:
-        restart()
-        gen += 1
-        t = 0
-
     if not pause:
         run()
-        sleep(1 / s)
-        t += 1
 
-
-start()
-pgzrun.go()
+if SHOW:
+    pgzrun.go()
