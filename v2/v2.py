@@ -1,4 +1,6 @@
 import os
+from platform import architecture
+
 os.environ['SDL_VIDEO_WINDOW_POS'] = '0,0'
 import pgzrun
 from pgzhelper import *
@@ -6,7 +8,6 @@ from time import sleep
 import random
 
 # GUY CLASS
-
 class guy:
     def __init__(self, neurons):
         self.d = 3
@@ -57,8 +58,9 @@ def reproduce(p1, p2):
     return kid
 
 # DONT TOUCH v
-def firstBrains(guys, layers, npl):
+def firstBrains(guys, npl):
     global maxB
+    layers = len(npl)
 
     result = []
     for dawg in range(guys):
@@ -137,7 +139,7 @@ def makeBrain(p1, p2):
     return guyInput
 
 
-
+# GET BRAIN INPUT
 def getInput(g):
     return whatDirectionToGo(g)
 def getBestA(g):
@@ -150,6 +152,7 @@ def getBestA(g):
             best = diff
             bestIndex = a
     return apples[bestIndex]
+
 def whatDirectionToGo(g):
     if len(apples) > 0:
         besta = getBestA(g)
@@ -168,7 +171,6 @@ def whatDirectionToGo(g):
         return [g.d / 3, lr, ud]
     else:
         return [g.d / 3, 0.5, 0.5]
-
 def whereAmIWithDiffs(g):
     besta = getBestA(g)
     xdiff = besta.x / 16 - g.x
@@ -263,19 +265,19 @@ def restart():
             pops.insert(0, g)
     for g in pops:
         guys.pop(g)
+    if not SHOW:
+        print("GEN " + str(gen) + "   Arc: " + str(brainArc) + "   Survival rate: " + str(round(float(len(guys)) / maxPop * 100, 2)) + "%")
     guys = newGuys(guys)
     scatter()
     makeApples()
 
 def run():
-    global t, limit, s, gen
+    global t, limit, s, gen, guys
 
     # Next Generation
     if t >= limit:
         restart()
         gen += 1
-        if not SHOW:
-            print("NEW GEN")
         t = 0
 
     for guy in guys:
@@ -286,19 +288,26 @@ def run():
                 guy.hungry = 0
                 apples.pop(a)
                 break
-
-    sleep(1 / s)
+    if not s == "full":
+        sleep(1 / s)
     t += 1
 
 
 def start():
-    global guys, fc, fn, h, w, limit, s, maxPop, SHOW
+    global guys, fc, fn, h, w, limit, s, maxPop, SHOW, gen, brainArc
 
-    SHOW = False
+    test = True
+    if test:
+        SHOW = False
 
     maxPop = 45
 
-    guys = firstGuys(firstBrains(maxPop, 2, [5, 7]))
+    brainArc = [5, 7]
+
+    guys = firstGuys(firstBrains(maxPop, brainArc))
+
+    inlays = 0
+    count = 10
 
     fc = "black"
     fn = "pixchicago"
@@ -307,14 +316,28 @@ def start():
     h = 30
 
     limit = 50  # TOTAL TICKS
-    s = 1000  # TICKS/SEC
+    s = "full"  # TICKS/SEC
+    # s = "full" for no delay
 
     initial()
     scatter()
     makeApples()
 
-    while not SHOW:
+
+    while test:
         run()
+        if gen == 200:
+            if count == 10:
+                count = 2
+                inlays += 1
+            else:
+                count += 2
+            brainArc = [5,7]
+            for x in range(inlays):
+                brainArc.insert(1, count)
+            guys = firstGuys(firstBrains(maxPop, brainArc))
+            initial()
+
 
 #Spawn randomly
 def scatter():

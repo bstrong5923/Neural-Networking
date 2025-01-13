@@ -68,8 +68,9 @@ def reproduce(p1, p2):
     return kid
 
 # DONT TOUCH v
-def firstBrains(guys, layers, npl):
+def firstBrains(guys, npl):
     global maxB
+    layers = len(npl)
 
     result = []
     for dawg in range(guys):
