@@ -257,7 +257,7 @@ def visual():
         result.append(apple)
     return result
 
-def restart():
+def nextGen():
     global guys
     pops = []
     for g in range(len(guys)):
@@ -266,7 +266,7 @@ def restart():
     for g in pops:
         guys.pop(g)
     if not SHOW:
-        print("GEN " + str(gen) + "   Arc: " + str(brainArc) + "   Survival rate: " + str(round(float(len(guys)) / maxPop * 100, 2)) + "%")
+        print("GEN " + str(gen) + "   Arc: " + str(brainArc) + "   Survival rate: " + str(round(float(len(guys)) / maxPop * 100, 20)) + "%")
     guys = newGuys(guys)
     scatter()
     makeApples()
@@ -276,7 +276,7 @@ def run():
 
     # Next Generation
     if t >= limit:
-        restart()
+        nextGen()
         gen += 1
         t = 0
 
@@ -294,7 +294,7 @@ def run():
 
 
 def start():
-    global guys, fc, fn, h, w, limit, s, maxPop, SHOW, gen, brainArc
+    global guys, fc, fn, h, w, limit, s, maxPop, SHOW, gen, brainArc, inlays, count, base
 
     test = True
     if test:
@@ -302,7 +302,8 @@ def start():
 
     maxPop = 45
 
-    brainArc = [5, 7]
+    base = [5, 7]
+    brainArc = base
 
     guys = firstGuys(firstBrains(maxPop, brainArc))
 
@@ -327,16 +328,20 @@ def start():
     while test:
         run()
         if gen == 200:
-            if count == 10:
-                count = 2
-                inlays += 1
-            else:
-                count += 2
-            brainArc = [5,7]
-            for x in range(inlays):
-                brainArc.insert(1, count)
-            guys = firstGuys(firstBrains(maxPop, brainArc))
-            initial()
+            restart()
+
+def restart():
+    global guys, count, inlays, base
+    if count == 10:
+        count = 2
+        inlays += 1
+    else:
+        count += 2
+    brainArc = base
+    for x in range(inlays):
+        brainArc.insert(1, count)
+    guys = firstGuys(firstBrains(maxPop, brainArc))
+    initial()
 
 
 #Spawn randomly

@@ -201,7 +201,7 @@ def visual():
         result.append(guy.actor)
     return result
 
-def restart():
+def nextGen():
     global guys
     pops = []
     for g in range(len(guys)):
@@ -293,7 +293,7 @@ def update():
 
     # Next Generation
     if t >= limit:
-        restart()
+        nextGen()
         gen += 1
         t = 0
 
