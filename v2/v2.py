@@ -258,43 +258,59 @@ def visual():
     return result
 
 def nextGen():
-    global guys
+    global guys, extinct, survivalRate
     pops = []
     for g in range(len(guys)):
         if guys[g].hungry == 1:
             pops.insert(0, g)
     for g in pops:
         guys.pop(g)
+    survivalRate = round(float(len(guys)) / maxPop * 100, 3)
     if not SHOW:
-        print("GEN " + str(gen) + "   Arc: " + str(brainArc) + "   Survival rate: " + str(round(float(len(guys)) / maxPop * 100, 20)) + "%")
-    guys = newGuys(guys)
-    scatter()
-    makeApples()
+        print("GEN " + str(gen) + "   Arc: " + str(brainArc) + "   Survival rate: " + str(survivalRate) + "%")
+    if len(guys) >= 2:
+        guys = newGuys(guys)
+        scatter()
+        makeApples()
+    else:
+        extinct = True
 
 def run():
-    global t, limit, s, gen, guys
+    global t, limit, s, gen, guys, extinct, extinctionStreak
+
+    if extinctionStreak > 3:
+        exit()
+
+    extinct = False
 
     # Next Generation
     if t >= limit:
         nextGen()
-        gen += 1
-        t = 0
+        if not extinct:
+            gen += 1
+            t = 0
 
-    for guy in guys:
-        act(guy, findMax(guy.choose(getInput(guy))) + 1)
-        for a in range(len(apples)):
-            apple = apples[a]
-            if guy.actor.collidepoint(apple.x, apple.y):
-                guy.hungry = 0
-                apples.pop(a)
-                break
-    if not s == "full":
-        sleep(1 / s)
-    t += 1
+    if not extinct:
+        for guy in guys:
+            act(guy, findMax(guy.choose(getInput(guy))) + 1)
+            for a in range(len(apples)):
+                apple = apples[a]
+                if guy.actor.collidepoint(apple.x, apple.y):
+                    guy.hungry = 0
+                    apples.pop(a)
+                    break
+        if not s == "full":
+            sleep(1 / s)
+        t += 1
+        extinctionStreak = 0
+    else:
+        print("EXTINCTION")
+        extinctionStreak += 1
+        restart()
 
 
 def start():
-    global guys, fc, fn, h, w, limit, s, maxPop, SHOW, gen, brainArc, inlays, count, base
+    global guys, fc, fn, h, w, limit, s, maxPop, SHOW, gen, brainArc, inlays, count, base, survivalRate, rates, less, extinctionStreak
 
     test = True
     if test:
@@ -303,7 +319,7 @@ def start():
     maxPop = 45
 
     base = [5, 7]
-    brainArc = base
+    brainArc = base[:]
 
     guys = firstGuys(firstBrains(maxPop, brainArc))
 
@@ -320,6 +336,8 @@ def start():
     s = "full"  # TICKS/SEC
     # s = "full" for no delay
 
+    extinctionStreak = 0
+
     initial()
     scatter()
     makeApples()
@@ -331,17 +349,24 @@ def start():
             restart()
 
 def restart():
-    global guys, count, inlays, base
+    global guys, count, inlays, base, brainArc
     if count == 10:
         count = 2
         inlays += 1
     else:
         count += 2
-    brainArc = base
+    brainArc = base[:]
     for x in range(inlays):
         brainArc.insert(1, count)
     guys = firstGuys(firstBrains(maxPop, brainArc))
     initial()
+
+def initial():
+    global survivalRate, rates, less
+    init()
+    survivalRate = 0
+    rates = []
+    less = 0
 
 
 #Spawn randomly
@@ -354,16 +379,26 @@ def scatter():
 
 #spawn apples
 def makeApples():
-    global apples, gen
+    global apples, gen, survivalRate, less
     apples = []
-    less = (gen * 0.015)
-    if less > 1.9:
-        less = 1.9
-    for x in range(int(maxPop * (2.5 - less))):
+
+    if len(rates) >= 5:
+        rates.pop(4)
+    rates.insert(0, survivalRate)
+    total = 0
+    for rate in rates:
+        total += rate
+
+    if total / 5 >= 45: # IF THE AVERAGE SURVIVAL RATE OF LAST FIVE >= 45%
+        less += 0.02
+
+    factor = 3 - less
+    for x in range(int(maxPop * factor)):
         apples.append(Actor("apple"))
     for apple in apples:
         apple.x = random.randint(2, w - 2) * 16
         apple.y = random.randint(2, h - 2) * 16
+    print("Apples: " + str(len(apples)))
 
 
 
@@ -400,7 +435,7 @@ def makeReal(num, min, max):
         num = min
     return num
 
-def initial():
+def init():
     global pause, t, gen, HEIGHT, height, WIDTH, width
     pause = False
     t = 0
