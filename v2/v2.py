@@ -258,7 +258,7 @@ def visual():
     return result
 
 def nextGen():
-    global guys, extinct, survivalRate
+    global guys, extinct, survivalRate, appleprint
     pops = []
     for g in range(len(guys)):
         if guys[g].hungry == 1:
@@ -267,7 +267,7 @@ def nextGen():
         guys.pop(g)
     survivalRate = round(float(len(guys)) / maxPop * 100, 3)
     if not SHOW:
-        print("GEN " + str(gen) + "   Arc: " + str(brainArc) + "   Survival rate: " + str(survivalRate) + "%")
+        print("GEN " + str(gen) + "   Arc: " + str(brainArc) + appleprint + "   Survival rate: " + str(survivalRate) + "%")
     if len(guys) >= 2:
         guys = newGuys(guys)
         scatter()
@@ -276,9 +276,14 @@ def nextGen():
         extinct = True
 
 def run():
-    global t, limit, s, gen, guys, extinct, extinctionStreak
+    global t, limit, s, gen, guys, extinct, extinctionStreak, lowApplesPerArc, Arcs
 
     if extinctionStreak > 3:
+        print("Nothing Surviving: Program Ending")
+        print("Lowest Apples per gen: ")
+        for x in range(len(lowApplesPerArc)):
+            print("Arc: " + Arcs[x] + " --> Min of " + str(lowApplesPerArc) + " Apples")
+
         exit()
 
     extinct = False
@@ -310,7 +315,7 @@ def run():
 
 
 def start():
-    global guys, fc, fn, h, w, limit, s, maxPop, SHOW, gen, brainArc, inlays, count, base, survivalRate, rates, less, extinctionStreak
+    global guys, fc, fn, h, w, limit, s, maxPop, SHOW, gen, brainArc, inlays, count, base, survivalRate, rates, less, extinctionStreak, lowApplesPerArc, Arcs
 
     test = True
     if test:
@@ -342,10 +347,15 @@ def start():
     scatter()
     makeApples()
 
+    lowApplesPerArc = []
+    Arcs = []
+
 
     while test:
         run()
         if gen == 200:
+            lowApplesPerArc.append(len(apples))
+            Arcs.append(brainArc)
             restart()
 
 def restart():
@@ -360,6 +370,8 @@ def restart():
         brainArc.insert(1, count)
     guys = firstGuys(firstBrains(maxPop, brainArc))
     initial()
+    scatter()
+    makeApples()
 
 def initial():
     global survivalRate, rates, less
@@ -379,7 +391,7 @@ def scatter():
 
 #spawn apples
 def makeApples():
-    global apples, gen, survivalRate, less
+    global apples, gen, survivalRate, less, appleprint
     apples = []
 
     if len(rates) >= 5:
@@ -398,7 +410,8 @@ def makeApples():
     for apple in apples:
         apple.x = random.randint(2, w - 2) * 16
         apple.y = random.randint(2, h - 2) * 16
-    print("Apples: " + str(len(apples)))
+
+    appleprint = "   Apples: " + str(len(apples))
 
 
 
